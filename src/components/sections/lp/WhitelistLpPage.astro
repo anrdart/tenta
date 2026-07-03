@@ -54,7 +54,6 @@ const jsonLd = [
   keywords={d.keywords}
   preloadHeroSrc="true"
 >
-  {platform === 'meta' && (
     <Fragment slot="head">
       <!-- Meta Pixel Code -->
       <script is:inline>
@@ -71,12 +70,9 @@ const jsonLd = [
       </script>
       <!-- End Meta Pixel Code -->
     </Fragment>
-  )}
-  {platform === 'meta' && (
     <noscript><img height="1" width="1" style="display:none"
       src="https://www.facebook.com/tr?id=1341980327384883&ev=PageView&noscript=1"
     /></noscript>
-  )}
 
   <LpHero
     eyebrow={d.hero.eyebrow}
