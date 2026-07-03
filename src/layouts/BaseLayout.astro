@@ -189,15 +189,16 @@ const cspContent = [
 
     <link rel="dns-prefetch" href="https://wa.me" />
 
-    {gaId && <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />}
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
     {gaId && <link rel="dns-prefetch" href="https://www.google-analytics.com" />}
-    {gaId && <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>}
-    {gaId && (
-      <script
-        is:inline
-        set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}
-      />
-    )}
+    <!-- Google tag (gtag.js) — GA4 (opsional via env) + Google Ads conversion AW-304997094 -->
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId ?? 'AW-304997094'}`}></script>
+    <script
+      is:inline
+      set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());${gaId ? `gtag('config','${gaId}');` : ''}gtag('config','AW-304997094');`}
+    />
+    <!-- End Google tag -->
+
 
     <Fragment set:html={allLd.map(ld => `<script type="application/ld+json">${safeJsonLd(ld)}</script>`).join('\n')} />
     <slot name="head" />
