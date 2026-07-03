@@ -14,9 +14,18 @@ const gscVerification = site.verification.google;
 
 const propLang = Astro.props.lang as 'en' | 'id' | undefined;
 const lang = propLang || getLang(Astro.currentLocale);
+// Cloudflare Pages menyajikan URL folder-style dengan trailing slash (versi 200).
+// Samakan canonical/hreflang/og:url ke bentuk itu agar tak kena 307 redirect
+// (yang memutus handshake Tag Assistant + inkonsisten SEO). Query & hash tak dipakai di sini.
+const withSlash = (u: string): string => {
+  const [base, ...rest] = u.split(/([?#])/);
+  const tail = rest.length ? rest.join('') : '';
+  if (/\.[a-z0-9]+$/i.test(base)) return u; // file (mis. .xml) — jangan tambah slash
+  return (base.endsWith('/') ? base : base + '/') + tail;
+};
 const basePath = stripLocale(Astro.url.pathname);
-const hrefId = getAbsoluteLocaleUrl('id', basePath);
-const hrefEn = getAbsoluteLocaleUrl('en', basePath);
+const hrefId = withSlash(getAbsoluteLocaleUrl('id', basePath));
+const hrefEn = withSlash(getAbsoluteLocaleUrl('en', basePath));
 const ogLocale = lang === 'en' ? 'en_US' : 'id_ID';
 const ogLocaleAlt = lang === 'en' ? 'id_ID' : 'en_US';
 
@@ -57,7 +66,7 @@ const {
 
 const fullTitle = title.toLowerCase().includes('tentaklik') ? title : `${title} — Tentaklik`;
 const url = new URL(Astro.url.pathname, site.url).toString();
-const canonicalUrl = canonical ?? url;
+const canonicalUrl = canonical ?? withSlash(url);
 const ogImage = image.startsWith('http') ? image : new URL(image, site.url).toString();
 
 const orgLd = organizationJsonLd();
