@@ -45,6 +45,7 @@ interface Props {
   pageType?: 'website' | 'article' | 'profile';
   publishedTime?: string;
   modifiedTime?: string;
+  gtmId?: string;
 }
 
 const {
@@ -62,6 +63,7 @@ const {
   pageType = 'website',
   publishedTime,
   modifiedTime,
+  gtmId,
 } = Astro.props;
 
 const fullTitle = title.toLowerCase().includes('tentaklik') ? title : `${title} — Tentaklik`;
@@ -104,13 +106,17 @@ const cspContent = [
 <!DOCTYPE html>
 <html lang={lang} dir="ltr">
   <head>
-    <!-- Google Tag Manager -->
-    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-T2FDL7NM');</script>
-    <!-- End Google Tag Manager -->
+    {gtmId && (
+      <Fragment>
+        <!-- Google Tag Manager -->
+        <script is:inline set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','${gtmId}');`}></script>
+        <!-- End Google Tag Manager -->
+      </Fragment>
+    )}
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -213,10 +219,14 @@ const cspContent = [
     <slot name="head" />
   </head>
   <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T2FDL7NM"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    {gtmId && (
+      <Fragment>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+      </Fragment>
+    )}
     {!bareHeader && <Header active={active} lang={lang} />}
     <main>
       <slot />
