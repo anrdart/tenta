@@ -80,14 +80,15 @@ const cspContent = [
   "base-uri 'self'",
   "object-src 'none'",
   "form-action 'self' https://wa.me",
-  `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com https://cdn-cgi/ https://connect.facebook.net https://*.facebook.net https://www.facebook.com https://*.facebook.com`,
+  `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.googlesyndication.com https://static.cloudflareinsights.com https://cdn-cgi/ https://connect.facebook.net https://*.facebook.net https://www.facebook.com https://*.facebook.com`,
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self' data:",
-  `img-src 'self' data: blob: https://www.google-analytics.com https://*.google-analytics.com https://*.g.doubleclick.net https://*.google.com https://www.facebook.com https://*.facebook.com`,
-  `connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net https://script.google.com https://script.googleusercontent.com https://www.facebook.com https://*.facebook.com`,
+  `img-src 'self' data: blob: https://www.google-analytics.com https://*.google-analytics.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.id https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.googlesyndication.com https://www.facebook.com https://*.facebook.com`,
+  `connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net https://www.googleadservices.com https://googleads.g.doubleclick.net https://script.google.com https://script.googleusercontent.com https://www.facebook.com https://*.facebook.com`,
   "manifest-src 'self'",
   "worker-src 'self'",
   "media-src 'self'",
+  `frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net https://*.g.doubleclick.net https://www.facebook.com`,
   "upgrade-insecure-requests",
 ].join('; ');
 ---
@@ -110,16 +111,6 @@ const cspContent = [
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
     {gscVerification && <meta name="google-site-verification" content={gscVerification} />}
-
-    <!-- Google tag (gtag.js) -->
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-T6YX6NJRTK"></script>
-    <script is:inline>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-T6YX6NJRTK');
-    </script>
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
