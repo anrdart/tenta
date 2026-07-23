@@ -83,7 +83,7 @@ export const GOOGLE_WL: WhitelistInfo = {
 export const SEWA_PLANS: SewaPlan[] = [
   {
     name: 'Starter',
-    tagline: 'Minimal spending 300rb',
+    tagline: '',
     price: '5%',
     unit: 'fee topup',
     features: [
@@ -97,7 +97,7 @@ export const SEWA_PLANS: SewaPlan[] = [
   },
   {
     name: 'Growth',
-    tagline: 'Minimal spending 300rb',
+    tagline: '',
     price: '4,5%',
     unit: 'fee topup',
     featured: true,
@@ -112,7 +112,7 @@ export const SEWA_PLANS: SewaPlan[] = [
   },
   {
     name: 'Scale',
-    tagline: 'Minimal spending 300rb',
+    tagline: '',
     price: '3,5%',
     unit: 'fee topup',
     features: [

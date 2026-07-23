@@ -33,7 +33,7 @@ const detailHref = lang === 'en' ? '/en/layanan/sewa-akun' : '/layanan/sewa-akun
         <div class={`pricing-card reveal ${p.featured ? 'featured' : ''}`}>
           <div>
             <h3 style="font-size:20px;">{p.name}</h3>
-            <p style="font-size:13px;color:var(--ink-500);margin-top:4px;">{p.tagline}</p>
+            {p.tagline && <p style="font-size:13px;color:var(--ink-500);margin-top:4px;">{p.tagline}</p>}
           </div>
           <div class="price">{p.price}<small> {p.unit}</small></div>
           <ul class="feat-list">
