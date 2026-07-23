@@ -116,6 +116,13 @@ export const UI = {
     'cs.sub': 'Brand & partner yang sudah tumbuh bareng kami.',
     'faq.title': 'FAQ',
     'faq.sub': 'Pertanyaan yang sering kami terima.',
+    // ── Home: Pricing Sewa Akun ──
+    'home.pricing.title': 'Pilihan Paket Sewa Akun untuk Performa Iklan yang Lebih Stabil',
+    'home.pricing.sub': 'Sesuaikan paket dengan kebutuhan skala bisnis Anda. Investasi terbaik untuk performa iklan yang lebih stabil.',
+    'home.pricing.setup': 'Setup Akun',
+    'home.pricing.rent': 'Sewa Akun',
+    'home.pricing.btn': 'Ajukan Sekarang',
+    'home.pricing.detail': 'Lihat detail lengkap',
     // ── Home: FinalCTA ──
     'fcta.title': 'Siap mempercepat pertumbuhan bisnis Anda?',
     'fcta.desc': 'Konsultasi gratis untuk mengidentifikasi peluang utama dan langkah berikutnya.',
@@ -278,6 +285,13 @@ export const UI = {
     'cs.sub': 'Brands & partners that have grown with us.',
     'faq.title': 'FAQ',
     'faq.sub': 'Questions we often get.',
+    // ── Home: Pricing Sewa Akun ──
+    'home.pricing.title': 'Account Rental Packages for More Stable Ad Performance',
+    'home.pricing.sub': 'Match a package to your business scale. The best investment for more stable ad performance.',
+    'home.pricing.setup': 'Account Setup',
+    'home.pricing.rent': 'Account Rental',
+    'home.pricing.btn': 'Apply Now',
+    'home.pricing.detail': 'See full details',
     // ── Home: FinalCTA ──
     'fcta.title': 'Ready to accelerate your business growth?',
     'fcta.desc': 'A free consultation to identify key opportunities and next steps.',

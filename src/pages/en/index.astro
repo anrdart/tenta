@@ -6,6 +6,7 @@ import CTABanner from '@components/sections/CTABanner.astro';
 import Process from '@components/sections/Process.astro';
 import Testimonials from '@components/sections/lp/LpTestimonials.astro';
 import CaseStudiesPreview from '@components/sections/CaseStudiesPreview.astro';
+import HomePricing from '@components/sections/HomePricing.astro';
 import FAQ from '@components/sections/FAQ.astro';
 import FinalCTA from '@components/sections/FinalCTA.astro';
 import { faqJsonLd, itemListJsonLd } from '@lib/seo';
@@ -58,6 +59,7 @@ const jsonLd = [
   <Process />
   <Testimonials title={tr('testi.title')} sub={tr('testi.sub')} />
   <CaseStudiesPreview />
+  <HomePricing />
   <FAQ />
   <FinalCTA />
 </BaseLayout>

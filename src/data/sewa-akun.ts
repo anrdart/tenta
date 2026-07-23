@@ -126,6 +126,16 @@ export const SEWA_PLANS: SewaPlan[] = [
   },
 ];
 
+// Biaya sewa akun & setup — ditampilkan di section pricing homepage (di atas fee topup per paket).
+export const SEWA_RENTAL = {
+  setup: 'Gratis',
+  tiers: [
+    { label: '1 Bulan', price: '150rb' },
+    { label: '3 Bulan', price: '350rb' },
+    { label: '6 Bulan', price: '792rb' },
+  ],
+} as const;
+
 export const FLOW_META: FlowStep[] = [
   { no: 1, tahap: 'Daftar akun dashboard', aksi: 'Buka tentaklik.com dan daftar akun dengan email aktif' },
   { no: 2, tahap: 'Isi formulir pengajuan', aksi: 'Masukkan: ID Business Manager Meta, link Fan Page, link landing page, jenis produk/layanan' },

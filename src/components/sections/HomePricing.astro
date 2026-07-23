@@ -1,0 +1,101 @@
+---
+import { getLang, useT } from '@i18n/utils';
+import { waLink } from '@data/site';
+import { SEWA_PLANS, SEWA_RENTAL } from '@data/sewa-akun';
+
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
+const detailHref = lang === 'en' ? '/en/layanan/sewa-akun' : '/layanan/sewa-akun';
+---
+<section id="pricing" style="background:var(--bg-warm);scroll-margin-top:90px;">
+  <div class="container">
+    <h2 class="section-title">{t('home.pricing.title')}</h2>
+    <p class="section-sub" style="margin-bottom:32px;">{t('home.pricing.sub')}</p>
+
+    <div class="rental-bar reveal">
+      <div class="rental-item">
+        <span class="rental-label">{t('home.pricing.setup')}</span>
+        <span class="rental-value rental-free">{SEWA_RENTAL.setup}</span>
+      </div>
+      <div class="rental-divider" aria-hidden="true"></div>
+      <div class="rental-item">
+        <span class="rental-label">{t('home.pricing.rent')}</span>
+        <div class="rental-tiers">
+          {SEWA_RENTAL.tiers.map((tier) => (
+            <span class="rental-tier"><strong>{tier.price}</strong> / {tier.label}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="pricing-grid">
+      {SEWA_PLANS.map((p) => (
+        <div class={`pricing-card reveal ${p.featured ? 'featured' : ''}`}>
+          <div>
+            <h3 style="font-size:20px;">{p.name}</h3>
+            <p style="font-size:13px;color:var(--ink-500);margin-top:4px;">{p.tagline}</p>
+          </div>
+          <div class="price">{p.price}<small> {p.unit}</small></div>
+          <ul class="feat-list">
+            {p.features.map((f) => <li>{f}</li>)}
+          </ul>
+          <a
+            href={waLink(lang === 'en'
+              ? `Hi Tentaklik! I'm interested in the ${p.name} account rental plan (${p.price} ${p.unit}). Could you share more details?`
+              : `Halo Tentaklik! Saya tertarik dengan paket sewa akun ${p.name} (${p.price} ${p.unit}). Bisa minta info lebih lanjut?`)}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={`btn ${p.featured ? 'btn-primary' : 'btn-ghost'}`}
+            style="justify-content:center;margin-top:auto;"
+          >{t('home.pricing.btn')}</a>
+        </div>
+      ))}
+    </div>
+
+    <p style="text-align:center;margin-top:28px;">
+      <a href={detailHref} class="pricing-detail-link">{t('home.pricing.detail')} →</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .rental-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px 32px;
+    max-width: 760px;
+    margin: 0 auto 40px;
+    padding: 20px 28px;
+    background: #fff;
+    border: 1px solid var(--ink-100);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+  }
+  .rental-item { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .rental-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--orange-700);
+  }
+  .rental-value { font-size: 22px; font-weight: 800; }
+  .rental-free { color: var(--orange-500); }
+  .rental-divider { width: 1px; align-self: stretch; background: var(--ink-100); }
+  .rental-tiers { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .rental-tier {
+    font-size: 14px; color: var(--ink-700);
+    background: var(--bg-warm); border-radius: 999px; padding: 6px 12px;
+  }
+  .rental-tier strong { color: var(--ink-900, #111); }
+  .pricing-grid {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 18px; max-width: 1240px; margin: 0 auto;
+  }
+  .pricing-grid > :global(.pricing-card) { flex: 1 1 180px; max-width: 260px; }
+  .pricing-detail-link { font-size: 14px; font-weight: 600; color: var(--orange-700); }
+  @media (max-width: 760px) {
+    .rental-divider { display: none; }
+    .pricing-grid { flex-direction: column; align-items: center; }
+    .pricing-grid > :global(.pricing-card) { flex: 1 1 100%; max-width: 400px; width: 100%; }
+  }
+</style>
