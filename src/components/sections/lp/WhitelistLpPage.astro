@@ -11,7 +11,7 @@ import IndustriesGrid from '@components/sections/IndustriesGrid.astro';
 import LpTestimonials from '@components/sections/lp/LpTestimonials.astro';
 import LpPromoBanner from '@components/sections/lp/LpPromoBanner.astro';
 import LpShortForm from '@components/sections/lp/LpShortForm.astro';
-import { META_LP, GOOGLE_LP, INDUSTRIES_LP, INDUSTRY_LP_HEADING } from '@data/whitelist-lp';
+import { META_LP, INDUSTRIES_LP, INDUSTRY_LP_HEADING } from '@data/whitelist-lp';
 import { serviceJsonLd, breadcrumbJsonLd } from '@lib/seo';
 import { site } from '@data/site';
 import { getLang } from '@i18n/utils';
@@ -20,42 +20,56 @@ interface Props { platform: 'meta' | 'google' }
 const { platform } = Astro.props;
 const lang = getLang(Astro.currentLocale);
 
-// SEO/tracking tetap per-permalink (penanda channel google/meta).
-const d = (platform === 'google' ? GOOGLE_LP : META_LP)[lang];
-// Tampilan digabung: konten LP dirender identik untuk kedua permalink (pakai versi Meta / copy Meta).
+// Tampilan & konteks digabung: kedua permalink dirender identik (konten + SEO).
+// Yang beda hanya penanda channel (canonical URL, GTM/Pixel) + header (khusus Google).
 const content = META_LP[lang];
+
+// SEO "1 konteks" — sama untuk /meta-whitelist & /google-whitelist.
+const seo = lang === 'en'
+  ? {
+      title: 'Whitelist Ad Account Rental (Meta & Google Ads) — Tentaklik',
+      description: 'Rent a Meta & Google Ads whitelist account at Tentaklik: stable, resilient accounts, no spending limit, minimal ban risk, and appeal support via the official partner line.',
+      keywords: ['whitelist ad account', 'meta ads account rental', 'google ads account rental', 'meta whitelist account', 'google whitelist account'],
+      crumbWhitelist: 'Whitelist Account',
+    }
+  : {
+      title: 'Sewa Akun Whitelist (Meta & Google Ads) — Tentaklik',
+      description: 'Sewa akun whitelist Meta & Google Ads di Tentaklik: akun stabil & tangguh, tanpa limit spending, minim risiko banned, dan support appeal via jalur partner resmi.',
+      keywords: ['akun whitelist', 'sewa akun meta ads', 'sewa akun google ads', 'akun whitelist meta', 'akun whitelist google'],
+      crumbWhitelist: 'Akun Whitelist',
+    };
+
 const slug = platform === 'google' ? 'google-whitelist' : 'meta-whitelist';
 const path = lang === 'en' ? `/en/${slug}` : `/${slug}`;
 const url = `${site.url}${path}`;
-const crumbWhitelist = platform === 'google' ? 'Google Whitelist' : 'Meta Whitelist';
 const crumbSewa = lang === 'en' ? 'Account Rental' : 'Sewa Akun';
 const crumbHome = lang === 'en' ? 'Home' : 'Beranda';
 
-// Header is visible only for Google Whitelist, hidden for Meta
+// Header hanya untuk Google Whitelist, disembunyikan untuk Meta.
 const hideHeader = platform !== 'google';
 
 const jsonLd = [
   serviceJsonLd({
-    name: d.seo.title,
-    description: d.seo.description,
+    name: seo.title,
+    description: seo.description,
     url,
-    serviceType: platform === 'google' ? 'Google Ads Whitelist Account Rental' : 'Meta Ads Whitelist Account Rental',
+    serviceType: 'Meta & Google Ads Whitelist Account Rental',
   }),
   breadcrumbJsonLd([
     { name: crumbHome, url: lang === 'en' ? `${site.url}/en` : site.url },
     { name: crumbSewa, url: `${site.url}${lang === 'en' ? '/en' : ''}/layanan/sewa-akun` },
-    { name: crumbWhitelist, url },
+    { name: seo.crumbWhitelist, url },
   ]),
 ];
 ---
 <BaseLayout
-  title={d.seo.title}
-  description={d.seo.description}
+  title={seo.title}
+  description={seo.description}
   active="layanan"
   bareLayout
   bareHeader={hideHeader}
   jsonLd={jsonLd}
-  keywords={d.keywords}
+  keywords={seo.keywords}
   preloadHeroSrc="true"
   gtmId={platform === 'google' ? 'GTM-N6FD2GVL' : 'GTM-T2FDL7NM'}
 >
