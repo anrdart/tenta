@@ -11,6 +11,14 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'never',
 
+  // Permalink LP diubah ke /whitelist/*. Redirect 301 dari URL lama (SEO + iklan existing).
+  redirects: {
+    '/meta-whitelist': '/whitelist/metaads',
+    '/google-whitelist': '/whitelist/gads',
+    '/en/meta-whitelist': '/en/whitelist/metaads',
+    '/en/google-whitelist': '/en/whitelist/gads',
+  },
+
   // i18n: ID default di root (/), EN di /en/. Halaman EN yang belum ada
   // jatuh ke konten ID via fallback rewrite (URL tetap /en/...).
   i18n: {

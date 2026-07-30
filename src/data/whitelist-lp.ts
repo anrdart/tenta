@@ -1,5 +1,5 @@
 // src/data/whitelist-lp.ts
-// Konten 2 landing page standalone: /meta-whitelist & /google-whitelist (+ /en/*).
+// Konten 2 landing page standalone: /whitelist/metaads & /whitelist/gads (+ /en/*).
 // Tanpa harga, tanpa WA — CTA mengarah ke /layanan/sewa-akun.
 // Bilingual: akses via META_LP[lang] / GOOGLE_LP[lang] / INDUSTRIES_LP[lang].
 import type { Industry } from '@data/sewa-akun';

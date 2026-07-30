@@ -23,7 +23,7 @@ const lang = getLang(Astro.currentLocale);
 // Yang beda hanya penanda channel (canonical URL, GTM/Pixel) + header (khusus Google).
 const content = META_LP[lang];
 
-// SEO "1 konteks" — sama untuk /meta-whitelist & /google-whitelist.
+// SEO "1 konteks" — sama untuk /whitelist/metaads & /whitelist/gads.
 const seo = lang === 'en'
   ? {
       title: 'Whitelist Ad Account Rental (Meta & Google Ads) — Tentaklik',
@@ -38,7 +38,7 @@ const seo = lang === 'en'
       crumbWhitelist: 'Akun Whitelist',
     };
 
-const slug = platform === 'google' ? 'google-whitelist' : 'meta-whitelist';
+const slug = platform === 'google' ? 'whitelist/gads' : 'whitelist/metaads';
 const path = lang === 'en' ? `/en/${slug}` : `/${slug}`;
 const url = `${site.url}${path}`;
 const crumbSewa = lang === 'en' ? 'Account Rental' : 'Sewa Akun';

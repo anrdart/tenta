@@ -35,8 +35,8 @@ const L = (p: string) => (lang === 'en' ? '/en' + (p === '/' ? '' : p) : p) || '
         <li>
           <a href={L("/layanan/sewa-akun")}>{t('svc.sewaAkun')}</a>
           <ul class="footer-subnav">
-            <li><a href={L("/meta-whitelist")}>{t('footer.metaWhitelist')}</a></li>
-            <li><a href={L("/google-whitelist")}>{t('footer.googleWhitelist')}</a></li>
+<li><a href={L("/whitelist/metaads")}>{t('footer.metaWhitelist')}</a></li>
+        <li><a href={L("/whitelist/gads")}>{t('footer.googleWhitelist')}</a></li>
           </ul>
         </li>
         <li><a href={L("/layanan/konsultasi")}>{t('svc.konsultasi')}</a></li>
