@@ -1,36 +1,51 @@
 ---
 interface Props {
+  // Layout lama (2 harga coret) — dipakai halaman USD. Bila keduanya diisi → mode promo.
   originalPrice?: string;
   promoPrice?: string;
+  // Layout baru (default LP): harga sewa mulai + note "akun tangguh".
+  startingPrice?: string;
+  lang?: 'en' | 'id';
 }
-const {
-  originalPrice = 'Rp200.000',
-  promoPrice = 'Rp50.000 / akun',
-} = Astro.props;
+const { originalPrice, promoPrice, startingPrice = 'Rp150.000' } = Astro.props;
+const lang = Astro.props.lang ?? (Astro.currentLocale === 'en' ? 'en' : 'id');
+const isEn = lang === 'en';
 
-// Determine if USD
-const isUsd = originalPrice.startsWith('$');
-const badgeText = isUsd ? '⚡ LIMITED OFFER' : '⚡ PROMO TERBATAS';
-const noteText = isUsd 
-  ? '*Special promo price for today\'s submissions' 
-  : '*Harga promo khusus pengajuan minggu ini';
+// Mode promo lama hanya aktif bila kedua harga dikirim eksplisit (halaman USD).
+const showPromo = Boolean(originalPrice && promoPrice);
+const isUsd = showPromo && originalPrice!.startsWith('$');
+const badgeText = showPromo
+  ? (isUsd ? '⚡ LIMITED OFFER' : '⚡ PROMO TERBATAS')
+  : (isEn ? '⚡ BEST RATE' : '⚡ HARGA TERBAIK');
+const noteText = showPromo
+  ? (isUsd ? '*Special promo price for today\'s submissions' : '*Harga promo khusus pengajuan minggu ini')
+  : (isEn ? 'Resilient accounts — ban-free' : 'Akun tangguh, bebas banned');
+const startLabel = isEn ? 'Rent from' : 'Sewa mulai dari';
+const perAccount = isEn ? '/ account' : '/ akun';
 ---
 <div class="lp-promo-container">
   <div class="lp-promo-badge">
     {badgeText}
   </div>
-  <div class="lp-promo-pricing">
-    <div class="lp-promo-item normal">
-      <span class="lp-label">{isUsd ? 'Regular price' : 'Biaya normal'}</span>
-      <span class="lp-price"><s>{originalPrice}</s></span>
+  {showPromo ? (
+    <div class="lp-promo-pricing">
+      <div class="lp-promo-item normal">
+        <span class="lp-label">{isUsd ? 'Regular price' : 'Biaya normal'}</span>
+        <span class="lp-price"><s>{originalPrice}</s></span>
+      </div>
+      <div class="lp-promo-divider"></div>
+      <div class="lp-promo-item promo">
+        <span class="lp-label">{isUsd ? 'Promo access' : 'Promo akses'}</span>
+        <span class="lp-price">{promoPrice}</span>
+      </div>
     </div>
-    <div class="lp-promo-divider"></div>
-    <div class="lp-promo-item promo">
-      <span class="lp-label">{isUsd ? 'Promo access' : 'Promo akses'}</span>
-      <span class="lp-price">{promoPrice}</span>
+  ) : (
+    <div class="lp-promo-starting">
+      <span class="lp-label">{startLabel}</span>
+      <span class="lp-start-price">{startingPrice} <span class="lp-start-unit">{perAccount}</span></span>
     </div>
-  </div>
-  <p class="lp-promo-note">{noteText}</p>
+  )}
+  <p class={`lp-promo-note ${showPromo ? '' : 'lp-promo-note-strong'}`}>{noteText}</p>
 </div>
 
 <style>
@@ -109,6 +124,47 @@ const noteText = isUsd
     margin: 12px 0 0 0;
     font-style: italic;
     font-weight: 500;
+  }
+
+  /* Layout baru: harga sewa mulai */
+  .lp-promo-starting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .lp-promo-starting .lp-label {
+    font-size: 11px;
+    color: var(--ink-400);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .lp-start-price {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--orange-600);
+    line-height: 1.1;
+  }
+  .lp-start-unit {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink-400);
+  }
+  .lp-promo-note-strong {
+    font-style: normal;
+    font-weight: 700;
+    color: var(--orange-600);
+    font-size: 13px;
+  }
+  .lp-promo-note-strong::before {
+    content: "✓ ";
+    font-weight: 800;
+  }
+
+  @media (max-width: 480px) {
+    .lp-start-price { font-size: 24px; }
   }
 
   @media (max-width: 480px) {

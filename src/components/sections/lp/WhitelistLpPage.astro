@@ -3,6 +3,7 @@
 // Tipis: pilih data per (platform, lang), render section yang sama.
 import BaseLayout from '@layouts/BaseLayout.astro';
 import LpHero from '@components/sections/lp/LpHero.astro';
+import LpPartners from '@components/sections/lp/LpPartners.astro';
 import LpWhyPlatform from '@components/sections/lp/LpWhyPlatform.astro';
 import LpComparison from '@components/sections/lp/LpComparison.astro';
 import LpPhotoVisit from '@components/sections/lp/LpPhotoVisit.astro';
@@ -19,7 +20,10 @@ interface Props { platform: 'meta' | 'google' }
 const { platform } = Astro.props;
 const lang = getLang(Astro.currentLocale);
 
+// SEO/tracking tetap per-permalink (penanda channel google/meta).
 const d = (platform === 'google' ? GOOGLE_LP : META_LP)[lang];
+// Tampilan digabung: konten LP dirender identik untuk kedua permalink (pakai versi Meta / copy Meta).
+const content = META_LP[lang];
 const slug = platform === 'google' ? 'google-whitelist' : 'meta-whitelist';
 const path = lang === 'en' ? `/en/${slug}` : `/${slug}`;
 const url = `${site.url}${path}`;
@@ -76,20 +80,21 @@ const jsonLd = [
     /></noscript>
 
   <LpHero
-    eyebrow={d.hero.eyebrow}
-    title={d.hero.title}
-    titleAccent={d.hero.titleAccent}
-    desc={d.hero.desc}
-    ctaText={d.cta.btn}
+    eyebrow={content.hero.eyebrow}
+    title={content.hero.title}
+    titleAccent={content.hero.titleAccent}
+    desc={content.hero.desc}
+    ctaText={content.cta.btn}
     ctaHref={`#shortform-${platform}`}
   />
+  <LpPartners />
   <LpWhyPlatform 
-    platform={d.platform} 
-    heading={d.whyHeading} 
-    sub={d.whySub} 
-    items={d.whyItems} 
+    platform={content.platform} 
+    heading={content.whyHeading} 
+    sub={content.whySub} 
+    items={content.whyItems} 
   />
-  <LpComparison platform={d.platform} />
+  <LpComparison platform={content.platform} />
   <IndustriesGrid 
     items={INDUSTRIES_LP[lang]} 
     heading={INDUSTRY_LP_HEADING[lang]} 
@@ -98,12 +103,12 @@ const jsonLd = [
     variant="premium"
   />
   <LpPhotoVisit 
-    heading={d.photoHeading} 
-    sub={d.photoSub} 
-    photos={d.photos} 
-    variant={platform === 'google' ? 'grid' : 'meta'} 
+    heading={content.photoHeading} 
+    sub={content.photoSub} 
+    photos={content.photos} 
+    variant="meta" 
   />
-  <LpTestimonials items={d.testimonials.map(t => ({ data: t }))} />
+  <LpTestimonials items={content.testimonials.map(t => ({ data: t }))} />
   <LpPromoBanner />
   <LpShortForm platform={platform} />
 </BaseLayout>
