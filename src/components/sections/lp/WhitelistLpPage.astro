@@ -3,7 +3,6 @@
 // Tipis: pilih data per (platform, lang), render section yang sama.
 import BaseLayout from '@layouts/BaseLayout.astro';
 import LpHero from '@components/sections/lp/LpHero.astro';
-import LpPartners from '@components/sections/lp/LpPartners.astro';
 import LpWhyPlatform from '@components/sections/lp/LpWhyPlatform.astro';
 import LpComparison from '@components/sections/lp/LpComparison.astro';
 import LpPhotoVisit from '@components/sections/lp/LpPhotoVisit.astro';
@@ -101,7 +100,6 @@ const jsonLd = [
     ctaText={content.cta.btn}
     ctaHref={`#shortform-${platform}`}
   />
-  <LpPartners />
   <LpWhyPlatform 
     platform={content.platform} 
     heading={content.whyHeading} 
