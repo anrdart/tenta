@@ -41,15 +41,22 @@ const formId = `shortform-${platform}`;
         <input id={`${formId}-wa`} type="tel" name="whatsapp" placeholder={t('form.wa.ph')} required maxlength="20" />
       </div>
       <div class="sf-field">
+        <label for={`${formId}-platform`}>{t('form.platform')}</label>
+        <select id={`${formId}-platform`} name="platform" required>
+          <option value="meta" selected={platform === 'meta'}>{t('form.platform.meta')}</option>
+          <option value="google" selected={platform === 'google'}>{t('form.platform.google')}</option>
+        </select>
+      </div>
+      <div class="sf-field">
         <label for={`${formId}-kat`}>{t('form.kategori')}</label>
         <select id={`${formId}-kat`} name="kategori" required>
           <option value="" disabled selected>{t('form.kategori.ph')}</option>
           <option value="UMKM">{t('form.kategori.umkm')}</option>
           <option value="Produk Kecantikan">{t('form.kategori.kecantikan')}</option>
-          <option value="Kesehatan">{t('form.kategori.kesehatan')}</option>
+          <option value="Travel">{t('form.kategori.travel')}</option>
           <option value="Konsultan Pendidikan">{t('form.kategori.pendidikan')}</option>
           <option value="Fashion">{t('form.kategori.fashion')}</option>
-          <option value="NGO / Yayasan">{t('form.kategori.ngo')}</option>
+          <option value="FnB / Kuliner">{t('form.kategori.fnb')}</option>
           <option value="Lainnya">{t('form.kategori.lainnya')}</option>
         </select>
       </div>
@@ -202,6 +209,8 @@ const formId = `shortform-${platform}`;
       let wa   = clip(String(fd.get('whatsapp') ?? ''), 20);
       const kat  = clip(String(fd.get('kategori') ?? ''), 100);
       const pkt  = clip(String(fd.get('paket') ?? ''), 100);
+      // Platform bisa dipilih user di form; fallback ke penanda halaman (data-platform).
+      const plat = (clip(String(fd.get('platform') ?? ''), 20) || platform);
       if (!NAME_RE.test(nama)) { showErr(MSG.nama); return; }
       if (!PHONE_RE.test(wa))  { showErr(MSG.wa); return; }
 
@@ -216,13 +225,13 @@ const formId = `shortform-${platform}`;
       const hasPricing = form.getAttribute('data-has-pricing') === 'true';
 
       const params = new URLSearchParams({
-        platform: platform, nama: nama, whatsapp: wa,
+        platform: plat, nama: nama, whatsapp: wa,
         kategori: kat, paket: pkt, source: window.location.href.split('#')[0],
       });
 
       // Simpan ke sheet (no-cors → opaque, .finally menandai request selesai), lalu arahkan ke WhatsApp.
       const waUrl = WA_NUMBER
-        ? `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waGreeting(platform, lang, nama, kat, pkt, hasPricing))}`
+        ? `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waGreeting(plat, lang, nama, kat, pkt, hasPricing))}`
         : '';
       
       // Fire Meta Pixel Lead Event
