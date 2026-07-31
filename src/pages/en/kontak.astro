@@ -76,20 +76,20 @@ const jsonLd = [
       <!-- Right: form -->
       <form id="kontak-form" class="card reveal" style="padding:32px;display:flex;flex-direction:column;gap:16px;" autocomplete="on">
         <div id="form-sent" style="display:none;padding:14px;background:#DCFCE7;color:#15803D;border-radius:10px;font-size:14px;font-weight:600;">
-          ✓ Pesan terkirim! Kami akan balas secepatnya.
+          ✓ Message sent! We will reply as soon as possible.
         </div>
         <div id="form-error" style="display:none;padding:14px;background:#FEE2E2;color:#B91C1C;border-radius:10px;font-size:14px;font-weight:600;" role="alert" aria-live="polite"></div>
 
         <!-- Honeypot field — hidden from humans, bots fill it -->
         <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
-          <label for="kontak-website">Website (jangan diisi)</label>
+          <label for="kontak-website">Website (leave empty)</label>
           <input id="kontak-website" name="website" type="text" tabindex="-1" autocomplete="off" />
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
           <div class="form-field">
-            <label for="kontak-name">Nama Lengkap *</label>
-            <input id="kontak-name" name="name" required type="text" autocomplete="name" placeholder="Nama Anda" maxlength="100" pattern="[\p{L}\p{M}\s.\-']{2,100}"/>
+            <label for="kontak-name">Full Name *</label>
+            <input id="kontak-name" name="name" required type="text" autocomplete="name" placeholder="Your name" maxlength="100" pattern="[\p{L}\p{M}\s.\-']{2,100}"/>
           </div>
           <div class="form-field">
             <label for="kontak-email">Email *</label>
@@ -97,40 +97,40 @@ const jsonLd = [
           </div>
         </div>
         <div class="form-field">
-          <label for="kontak-phone">Nomor WhatsApp</label>
+          <label for="kontak-phone">WhatsApp Number</label>
           <input id="kontak-phone" name="phone" type="tel" autocomplete="tel" placeholder="0812-xxxx-xxxx" maxlength="20" pattern="[0-9+\-\s()]{6,20}"/>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
           <div class="form-field">
-            <label for="kontak-service">Layanan yang Diminati</label>
+            <label for="kontak-service">Service of Interest</label>
             <select id="kontak-service" name="service">
               <option value="Website Development">Website Development</option>
               <option value="Google Ads">Google Ads</option>
               <option value="Meta Ads">Meta Ads</option>
-              <option value="Konsultasi Digital Marketing">Konsultasi Digital Marketing</option>
-              <option value="Mix / Belum Tahu">Mix / Belum Tahu</option>
+              <option value="Digital Marketing Consultation">Digital Marketing Consultation</option>
+              <option value="Mix / Not Sure Yet">Mix / Not Sure Yet</option>
             </select>
           </div>
           <div class="form-field">
-            <label for="kontak-budget">Estimasi Budget</label>
+            <label for="kontak-budget">Estimated Budget</label>
             <select id="kontak-budget" name="budget">
-              <option value="Belum pasti" selected>Belum pasti</option>
-              <option value="< Rp 5jt">&lt; Rp 5jt</option>
-              <option value="Rp 5-10jt">Rp 5-10jt</option>
-              <option value="Rp 10-25jt">Rp 10-25jt</option>
-              <option value="Rp 25-50jt">Rp 25-50jt</option>
-              <option value="> Rp 50jt">&gt; Rp 50jt</option>
+              <option value="Not sure yet" selected>Not sure yet</option>
+              <option value="< $300">&lt; $300</option>
+              <option value="$300 - $600">$300 - $600</option>
+              <option value="$600 - $1,500">$600 - $1,500</option>
+              <option value="$1,500 - $3,000">$1,500 - $3,000</option>
+              <option value="> $3,000">&gt; $3,000</option>
             </select>
           </div>
         </div>
         <div class="form-field">
-          <label for="kontak-message">Cerita Singkat tentang Project *</label>
-          <textarea id="kontak-message" name="message" required placeholder="Ceritakan kondisi bisnis, tujuan, dan apa yang sedang dicari..." maxlength="2000" minlength="10"></textarea>
+          <label for="kontak-message">Tell Us About Your Project *</label>
+          <textarea id="kontak-message" name="message" required placeholder="Tell us about your business, goals, and what you are looking for..." maxlength="2000" minlength="10"></textarea>
         </div>
         <button type="submit" class="btn btn-primary" style="align-self:flex-start;padding:14px 28px;">
-          Kirim Pesan <ArrowRight size={14} />
+          Send Message <ArrowRight size={14} />
         </button>
-        <p style="font-size:12px;color:var(--ink-500);">Dengan submit, Anda setuju kami menghubungi Anda untuk follow-up. Data tidak akan dibagikan ke pihak ketiga.</p>
+        <p style="font-size:12px;color:var(--ink-500);">By submitting, you agree that we may contact you for follow-up. Your data will not be shared with third parties.</p>
       </form>
     </div>
   </section>
@@ -210,8 +210,8 @@ const jsonLd = [
 
       if (String(fd.get('website') ?? '').length > 0) return;
       const now = Date.now();
-      if (now - formLoadedAt < MIN_MS_BEFORE_SUBMIT) { showErr('Tunggu sebentar sebelum mengirim.'); return; }
-      if (now - lastSubmitAt < MIN_MS_BETWEEN_SUBMITS) { showErr('Terlalu cepat — coba lagi sebentar.'); return; }
+      if (now - formLoadedAt < MIN_MS_BEFORE_SUBMIT) { showErr('Please wait a moment before submitting.'); return; }
+      if (now - lastSubmitAt < MIN_MS_BETWEEN_SUBMITS) { showErr('Too fast — please try again in a moment.'); return; }
 
       const name    = clip(String(fd.get('name')    ?? ''), 100);
       const email   = clip(String(fd.get('email')   ?? ''), 254);
@@ -220,10 +220,10 @@ const jsonLd = [
       const budget  = clip(String(fd.get('budget')  ?? ''), 100);
       const message = clip(String(fd.get('message') ?? ''), 2000);
 
-      if (!NAME_RE.test(name))   { showErr('Nama tidak valid (2–100 karakter huruf).'); return; }
-      if (!EMAIL_RE.test(email)) { showErr('Format email tidak valid.'); return; }
-      if (phone && !PHONE_RE.test(phone)) { showErr('Nomor WhatsApp tidak valid.'); return; }
-      if (message.length < 10)   { showErr('Pesan minimal 10 karakter.'); return; }
+      if (!NAME_RE.test(name))   { showErr('Invalid name (2–100 letter characters).'); return; }
+      if (!EMAIL_RE.test(email)) { showErr('Invalid email format.'); return; }
+      if (phone && !PHONE_RE.test(phone)) { showErr('Invalid WhatsApp number.'); return; }
+      if (message.length < 10)   { showErr('Message must be at least 10 characters.'); return; }
 
       lastSubmitAt = now;
 
