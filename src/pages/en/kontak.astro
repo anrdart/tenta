@@ -239,13 +239,13 @@ const jsonLd = [
       }
 
       const msg =
-        `Halo Tentaklik, saya tertarik diskusi:\n\n` +
-        `Nama: ${name}\n` +
+        `Hello Tentaklik, I would like to discuss:\n\n` +
+        `Name: ${name}\n` +
         `Email: ${email}\n` +
         `WhatsApp: ${phone}\n` +
-        `Layanan: ${service}\n` +
+        `Service: ${service}\n` +
         `Budget: ${budget}\n\n` +
-        `Tentang project:\n${message}`;
+        `About the project:\n${message}`;
       window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
       if (sentMsg) { sentMsg.style.display = 'flex'; setTimeout(() => { sentMsg.style.display = 'none'; }, 5000); }
       form.reset();
