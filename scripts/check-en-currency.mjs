@@ -1,12 +1,14 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
-const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
+const fileUrl = (path) => new URL(`../${path}`, import.meta.url);
+const read = (path) => readFileSync(fileUrl(path), 'utf8');
 const data = read('src/data/sewa-akun.ts');
 const homePricing = read('src/components/sections/HomePricing.astro');
 const enRentalPage = read('src/pages/en/layanan/sewa-akun.astro');
 const enContact = read('src/pages/en/kontak.astro');
 const idContact = read('src/pages/kontak.astro');
+const middleware = read('src/middleware.ts').replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
 
 const exportBlock = (source, name) => {
   const start = source.search(new RegExp(`^export const ${name}\\b`, 'm'));
@@ -55,6 +57,40 @@ for (const [price, pattern] of [
   ['792rb', /price:\s*['"]792rb['"]/],
 ]) {
   assert.match(rentalId, pattern, `Missing price: '${price}' in SEWA_RENTAL`);
+}
+
+const routeGuardStart = middleware.search(/stripLocale\s*\(\s*url\.pathname\s*\)/);
+const geoLogicStart = middleware.indexOf('const isEnPath');
+assert.notEqual(routeGuardStart, -1, 'Middleware must derive a locale-neutral path');
+assert.ok(geoLogicStart > routeGuardStart, 'Middleware route guard must run before geo logic');
+const routeGuard = middleware.slice(routeGuardStart, geoLogicStart);
+assert.match(routeGuard, /['"]\/whitelist\/metaads\/?['"]/, 'Middleware must allow only the Meta Ads whitelist LP');
+assert.match(routeGuard, /['"]\/whitelist\/gads\/?['"]/, 'Middleware must allow only the Google Ads whitelist LP');
+assert.match(routeGuard, /if\b[\s\S]*return\s+next\s*\(\s*\)/, 'Middleware must bypass paths outside the whitelist LP allowlist');
+assert.ok(
+  /!\s*[^;\n]*(?:includes|has|some)\s*\(/.test(routeGuard)
+    || /(?:!==|!=)[\s\S]*&&[\s\S]*(?:!==|!=)/.test(routeGuard),
+  'Middleware route guard must reject paths outside the exact allowlist',
+);
+
+const builtPages = [
+  ['dist/client/en/index.html', /\$10\b/, 'English homepage'],
+  ['dist/client/en/kontak/index.html', /\$300\b/, 'English contact'],
+  ['dist/client/en/layanan/sewa-akun/index.html', /(?:\$|&#(?:36|x24);)20\s*(?:-|&(?:#45|#x2d|minus|ndash);|&#(?:8211|x2013);)\s*(?:\$|&#(?:36|x24);)300/i, 'English account-rental'],
+];
+const builtFilesExist = builtPages.map(([path]) => existsSync(fileUrl(path)));
+
+if (builtFilesExist.some(Boolean)) {
+  assert.ok(builtFilesExist.every(Boolean), 'Expected all three built English pages when any built output exists');
+  for (const [path, expectedUsd, label] of builtPages) {
+    const html = read(path);
+    assert.doesNotMatch(html, /<meta\b[^>]*http-equiv\s*=\s*["']?refresh\b/i, `${label} build is a meta-refresh redirect document`);
+    assert.doesNotMatch(html, /(?:window\.|document\.)?location(?:\.href|\.replace)?\s*(?:=|\()/i, `${label} build directly redirects with location`);
+    assert.match(html, expectedUsd, `${label} build is missing expected USD pricing`);
+  }
+  console.log('Built English pages are real HTML with expected USD pricing');
+} else {
+  console.log('Built English pages not found; skipped build-output checks');
 }
 
 console.log('English USD pricing checks passed');

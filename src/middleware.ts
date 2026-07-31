@@ -16,8 +16,8 @@ function cookieHeader(value: string): string {
 export const onRequest = defineMiddleware(async (context, next) => {
   const { request, url, cookies } = context;
 
-  // Lewati aset / non-navigasi (route on-demand kita hanya halaman HTML).
-  if (/\.[a-zA-Z0-9]+$/.test(url.pathname)) return next();
+  const neutral = stripLocale(url.pathname).replace(/\/$/, '');
+  if (!['/whitelist/metaads', '/whitelist/gads'].includes(neutral)) return next();
 
   const isEnPath = url.pathname === '/en' || url.pathname.startsWith('/en/');
   const currentLang: 'id' | 'en' = isEnPath ? 'en' : 'id';
@@ -36,7 +36,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const wantLang: 'id' | 'en' = !country || country === 'ID' || country === 'XX' || country === 'T1' ? 'id' : 'en';
 
   if (wantLang !== currentLang) {
-    const neutral = stripLocale(url.pathname);
     const target = wantLang === 'en'
       ? `/en${neutral === '/' ? '' : neutral}`
       : neutral;
