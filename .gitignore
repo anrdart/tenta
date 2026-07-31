@@ -6,6 +6,7 @@ dist/
 *.log
 .idea/
 .vscode/
+.worktrees/
 
 # wrangler files
 .wrangler
