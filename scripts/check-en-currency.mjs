@@ -62,8 +62,8 @@ for (const [name, uniqueFeatures] of Object.entries(approvedFeatures)) {
   }
 }
 
-assert.doesNotMatch(enPlans.Growth, exactField('price', '4.5%'), "Obsolete Growth fee '4.5%' remains in SEWA_PLANS_EN");
-assert.doesNotMatch(enPlans.Scale, exactField('price', '3.5%'), "Obsolete Scale fee '3.5%' remains in SEWA_PLANS_EN");
+assert.doesNotMatch(plansEn, exactField('price', '4.5%'), "Obsolete fee '4.5%' remains in SEWA_PLANS_EN");
+assert.doesNotMatch(plansEn, exactField('price', '3.5%'), "Obsolete fee '3.5%' remains in SEWA_PLANS_EN");
 for (const value of ['$20 - $300 per top-up', '$300 - $900 per top-up', 'Above $900 per top-up']) {
   assert.doesNotMatch(plansEn, exactString(value), `Obsolete feature '${value}' remains in SEWA_PLANS_EN`);
 }
