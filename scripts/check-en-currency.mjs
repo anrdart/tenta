@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 const fileUrl = (path) => new URL(`../${path}`, import.meta.url);
 const read = (path) => readFileSync(fileUrl(path), 'utf8');
 const data = read('src/data/sewa-akun.ts');
+const ui = read('src/i18n/ui.ts');
 const homePricing = read('src/components/sections/HomePricing.astro');
 const whitelistLpPage = read('src/components/sections/lp/WhitelistLpPage.astro');
 const enRentalPage = read('src/pages/en/layanan/sewa-akun.astro');
@@ -36,6 +37,11 @@ const exactString = (value) => new RegExp(`(['"])${escapeRegExp(value)}\\1`);
 
 const plansId = exportBlock(data, 'SEWA_PLANS');
 const plansEn = exportBlock(data, 'SEWA_PLANS_EN');
+const enUiStart = ui.search(/^\s{2}en:\s*\{/m);
+assert.notEqual(enUiStart, -1, 'Missing English UI block');
+const enUiEnd = ui.lastIndexOf('} as const');
+assert.ok(enUiEnd > enUiStart, 'Missing end of English UI block');
+const enUi = ui.slice(enUiStart, enUiEnd);
 const rentalEn = exportBlock(data, 'SEWA_RENTAL_EN');
 const rentalId = exportBlock(data, 'SEWA_RENTAL');
 const enPlans = Object.fromEntries(['Starter', 'Growth', 'Scale'].map((name) => [name, namedPlanBlock(plansEn, 'SEWA_PLANS_EN', name)]));
@@ -44,6 +50,16 @@ const idPlans = Object.fromEntries(['Starter', 'Growth', 'Scale'].map((name) => 
 for (const [name, fee] of [['Starter', '5%'], ['Growth', '4%'], ['Scale', '3%']]) {
   assert.match(enPlans[name], exactField('price', fee), `Missing approved fee '${fee}' for ${name} in SEWA_PLANS_EN`);
 }
+
+for (const [key, label] of [
+  ['form.paket.starter', 'Starter 5% top-up fee'],
+  ['form.paket.growth', 'Growth 4% top-up fee'],
+  ['form.paket.scale', 'Scale 3% top-up fee'],
+]) {
+  assert.match(enUi, new RegExp(`(['"])${escapeRegExp(key)}\\1\\s*:\\s*(['"])${escapeRegExp(label)}\\2`), `Missing approved English UI label '${key}': '${label}'`);
+}
+assert.doesNotMatch(enUi, /(['"])form\.paket\.growth\1\s*:\s*(['"])Growth 4\.5% fee topup\2/, "Obsolete English Growth 4.5% form label remains");
+assert.doesNotMatch(enUi, /(['"])form\.paket\.scale\1\s*:\s*(['"])Scale 3\.5% fee topup\2/, "Obsolete English Scale 3.5% form label remains");
 
 const approvedFeatures = {
   Starter: ['Monthly spend: $0 - $10,000', 'Standard Priority Support'],
