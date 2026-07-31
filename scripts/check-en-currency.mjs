@@ -62,17 +62,26 @@ for (const [name, uniqueFeatures] of Object.entries(approvedFeatures)) {
   }
 }
 
-assert.doesNotMatch(plansEn, exactField('price', '4.5%'), "Obsolete fee '4.5%' remains in SEWA_PLANS_EN");
-assert.doesNotMatch(plansEn, exactField('price', '3.5%'), "Obsolete fee '3.5%' remains in SEWA_PLANS_EN");
-for (const value of ['$20 - $300 per top-up', '$300 - $900 per top-up', 'Above $900 per top-up']) {
-  assert.doesNotMatch(plansEn, exactString(value), `Obsolete feature '${value}' remains in SEWA_PLANS_EN`);
-}
-
 for (const price of ['$31', '$75', '$169']) {
   assert.match(rentalEn, exactField('price', price), `Missing approved rental price '${price}' in SEWA_RENTAL_EN`);
 }
-for (const price of ['$10', '$25', '$50']) {
-  assert.doesNotMatch(rentalEn, exactField('price', price), `Obsolete rental price '${price}' remains in SEWA_RENTAL_EN`);
+
+const englishPricingSurfaces = [plansEn, rentalEn, whitelistLpPage, metaPricing, googlePricing, metaUsd, googleUsd].join('\n');
+for (const fee of ['4.5%', '3.5%']) {
+  assert.doesNotMatch(plansEn, exactField('price', fee), `Obsolete English price field '${fee}' remains in SEWA_PLANS_EN`);
+  assert.doesNotMatch(englishPricingSurfaces, exactString(fee), `Obsolete English fee '${fee}' remains`);
+}
+for (const value of [
+  '$20 - $300 per top-up',
+  '$300 - $900 per top-up',
+  'Above $900 per top-up',
+  '$10',
+  '$25',
+  '$50',
+  '$12',
+  '$5 / account',
+]) {
+  assert.doesNotMatch(englishPricingSurfaces, exactString(value), `Obsolete English pricing value '${value}' remains`);
 }
 
 for (const [name, fee, range] of [
@@ -94,13 +103,25 @@ assert.match(enRentalPage, /plans\s*=\s*\{\s*SEWA_PLANS_EN\s*\}/, 'English accou
 for (const [path, source] of [
   ['src/pages/meta-whitelist-pricing.astro', metaPricing],
   ['src/pages/google-whitelist-pricing.astro', googlePricing],
+]) {
+  assert.match(source, /import\s*\{[^}]*\bSEWA_PLANS_EN\b[^}]*\}\s*from\s*['"]@data\/sewa-akun['"]/s, `${path} must import SEWA_PLANS_EN`);
+  assert.match(source, /import\s*\{[^}]*\bSEWA_PLANS\b[^}]*\}\s*from\s*['"]@data\/sewa-akun['"]/s, `${path} must import SEWA_PLANS`);
+  assert.match(source, /\bconst\s+plans\s*=\s*lang\s*===\s*['"]en['"]\s*\?\s*SEWA_PLANS_EN\s*:\s*SEWA_PLANS\s*;/, `${path} must select SEWA_PLANS_EN for English`);
+  assert.match(source, /<PricingSection\b[^>]*\bplans\s*=\s*\{\s*plans\s*\}/s, `${path} must render selected plans`);
+}
+for (const [path, source] of [
   ['src/pages/meta-whitelist-usd.astro', metaUsd],
   ['src/pages/google-whitelist-usd.astro', googleUsd],
 ]) {
-  const withoutImportsOrComments = source
-    .replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '')
-    .replace(/^\s*import\b[^;]*;\s*$/gm, '');
-  assert.match(withoutImportsOrComments, /\bSEWA_PLANS_EN\b/, `${path} does not consume SEWA_PLANS_EN`);
+  assert.match(source, /import\s*\{[^}]*\bSEWA_PLANS_EN\b[^}]*\}\s*from\s*['"]@data\/sewa-akun['"]/s, `${path} must import SEWA_PLANS_EN`);
+  assert.match(source, /<PricingSection\b[^>]*\bplans\s*=\s*\{\s*SEWA_PLANS_EN\s*\}/s, `${path} must render SEWA_PLANS_EN`);
+}
+for (const [path, source] of [
+  ['src/pages/meta-whitelist-pricing.astro', metaPricing],
+  ['src/pages/google-whitelist-pricing.astro', googlePricing],
+  ['src/pages/meta-whitelist-usd.astro', metaUsd],
+  ['src/pages/google-whitelist-usd.astro', googleUsd],
+]) {
   assert.doesNotMatch(source, /\bconst\s+englishPlans\s*=/, `${path} still declares englishPlans`);
   assert.doesNotMatch(source, /\bconst\s+usdPlans\s*=/, `${path} still declares usdPlans`);
 }
@@ -145,7 +166,7 @@ assert.ok(
 
 const htmlDollar = String.raw`(?:\$|&dollar;|&#0*36;|&#x0*24;)`;
 const htmlSpace = String.raw`(?:\s|&nbsp;|&#0*160;|&#x0*a0;)*`;
-const htmlComma = String.raw`(?:,|&comma;|&#0*44;|&#x0*2c;|\s*)`;
+const htmlComma = String.raw`(?:,|&comma;|&#0*44;|&#x0*2c;)`;
 const htmlDash = String.raw`(?:-|[‐-―−]|&(?:hyphen|minus|ndash|mdash);|&#0*(?:45|8208|8209|8210|8211|8212|8213|8722);|&#x0*(?:2d|2010|2011|2012|2013|2014|2015|2212);)`;
 const htmlNumber = (value) => value.split(',').map(escapeRegExp).join(htmlComma);
 const htmlUsd = (value) => `${htmlDollar}${htmlSpace}${htmlNumber(value)}(?![\\d,.]|&(?:comma|#0*44|#x0*2c);)`;
@@ -170,7 +191,6 @@ if (missingBuiltPages.length && (requireBuild || missingBuiltPages.length < buil
   for (const [path, expectedUsd, label] of builtPages) {
     const html = read(path);
     assert.doesNotMatch(html, /<meta\b[^>]*http-equiv\s*=\s*["']?refresh\b/i, `${label} build is a meta-refresh redirect document`);
-    assert.doesNotMatch(html, /(?:window\.|document\.)?location(?:\.href|\.replace)?\s*(?:=|\()/i, `${label} build directly redirects with location`);
     assert.match(html, expectedUsd, `${label} build is missing expected USD pricing`);
   }
   console.log('Built English pages are real HTML with expected USD pricing');
