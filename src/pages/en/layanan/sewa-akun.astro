@@ -10,7 +10,7 @@ import { getLang, useT } from '@i18n/utils';
 import { serviceJsonLd, faqJsonLd, breadcrumbJsonLd } from '@lib/seo';
 import { site } from '@data/site';
 import {
-  SEWA_HERO, META_WL, GOOGLE_WL, SEWA_PLANS,
+  SEWA_HERO, META_WL, GOOGLE_WL, SEWA_PLANS_EN,
   SEWA_FAQS, SEWA_SEO, SEWA_KEYWORDS,
   INDUSTRIES, INDUSTRY_HEADING,
   type WhitelistInfo,
@@ -83,7 +83,7 @@ const jsonLd = [
 
   <IndustriesGrid items={INDUSTRIES} heading={INDUSTRY_HEADING} bg="warm" />
 
-  <PricingSection plans={SEWA_PLANS} service="Sewa Akun" />
+  <PricingSection plans={SEWA_PLANS_EN} service="Account Rental" />
 
   <ServiceFAQ items={SEWA_FAQS} />
   <ServiceCTA />

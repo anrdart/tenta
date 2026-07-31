@@ -1,10 +1,12 @@
 ---
 import { getLang, useT } from '@i18n/utils';
 import { waLink } from '@data/site';
-import { SEWA_PLANS, SEWA_RENTAL } from '@data/sewa-akun';
+import { SEWA_PLANS, SEWA_PLANS_EN, SEWA_RENTAL, SEWA_RENTAL_EN } from '@data/sewa-akun';
 
 const lang = getLang(Astro.currentLocale);
 const t = useT(lang);
+const plans = lang === 'en' ? SEWA_PLANS_EN : SEWA_PLANS;
+const rental = lang === 'en' ? SEWA_RENTAL_EN : SEWA_RENTAL;
 const detailHref = lang === 'en' ? '/en/layanan/sewa-akun' : '/layanan/sewa-akun';
 ---
 <section id="pricing" style="background:var(--bg-warm);scroll-margin-top:90px;">
@@ -15,13 +17,13 @@ const detailHref = lang === 'en' ? '/en/layanan/sewa-akun' : '/layanan/sewa-akun
     <div class="rental-bar reveal">
       <div class="rental-item">
         <span class="rental-label">{t('home.pricing.setup')}</span>
-        <span class="rental-value rental-free">{SEWA_RENTAL.setup}</span>
+        <span class="rental-value rental-free">{rental.setup}</span>
       </div>
       <div class="rental-divider" aria-hidden="true"></div>
       <div class="rental-item">
         <span class="rental-label">{t('home.pricing.rent')}</span>
         <div class="rental-tiers">
-          {SEWA_RENTAL.tiers.map((tier) => (
+          {rental.tiers.map((tier) => (
             <span class="rental-tier"><strong>{tier.price}</strong> / {tier.label}</span>
           ))}
         </div>
@@ -29,7 +31,7 @@ const detailHref = lang === 'en' ? '/en/layanan/sewa-akun' : '/layanan/sewa-akun
     </div>
 
     <div class="pricing-grid">
-      {SEWA_PLANS.map((p) => (
+      {plans.map((p) => (
         <div class={`pricing-card reveal ${p.featured ? 'featured' : ''}`}>
           <div>
             <h3 style="font-size:20px;">{p.name}</h3>
