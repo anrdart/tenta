@@ -18,13 +18,14 @@ const exportBlock = (source, name) => {
 
 const plansEn = exportBlock(data, 'SEWA_PLANS_EN');
 const rentalEn = exportBlock(data, 'SEWA_RENTAL_EN');
+const rentalId = exportBlock(data, 'SEWA_RENTAL');
 
-for (const [value, pattern] of [
-  ['$20 - $300', /price:\s*['"]\$20 - \$300['"]/],
-  ['$300 - $900', /price:\s*['"]\$300 - \$900['"]/],
-  ['Above $900', /price:\s*['"]Above \$900['"]/],
+for (const [feature, pattern] of [
+  ['$20 - $300 per top-up', /['"]\$20 - \$300 per top-up['"]/],
+  ['$300 - $900 per top-up', /['"]\$300 - \$900 per top-up['"]/],
+  ['Above $900 per top-up', /['"]Above \$900 per top-up['"]/],
 ]) {
-  assert.match(plansEn, pattern, `Missing price: '${value}' in SEWA_PLANS_EN`);
+  assert.match(plansEn, pattern, `Missing feature: '${feature}' in SEWA_PLANS_EN`);
 }
 for (const [price, pattern] of [
   ['$10', /price:\s*['"]\$10['"]/],
@@ -36,13 +37,24 @@ for (const [price, pattern] of [
 
 assert.match(homePricing, /lang\s*===\s*['"]en['"]\s*\?\s*SEWA_PLANS_EN\s*:\s*SEWA_PLANS/, 'Missing English plans locale selection');
 assert.match(homePricing, /lang\s*===\s*['"]en['"]\s*\?\s*SEWA_RENTAL_EN\s*:\s*SEWA_RENTAL/, 'Missing English rental locale selection');
+assert.match(homePricing, /plans\.map\s*\(/, 'HomePricing does not render selected plans');
+assert.match(homePricing, /rental\.setup\b/, 'HomePricing does not render selected rental setup');
+assert.match(homePricing, /rental\.tiers\.map\s*\(/, 'HomePricing does not render selected rental tiers');
 assert.match(enRentalPage, /plans\s*=\s*\{\s*SEWA_PLANS_EN\s*\}/, 'English account-rental page does not use SEWA_PLANS_EN');
 
 assert.doesNotMatch(enContact, /\b(?:Rp|rb|jt)\b|\d+(?:[.,]\d+)?\s*(?:rb|jt)\b/i, 'English contact contains IDR markers');
 for (const value of ['$300', '$600', '$1,500', '$3,000']) {
   assert.ok(enContact.includes(value), `Missing ${value} in English contact`);
 }
-assert.match(idContact, /\bRp\b/, 'Indonesian contact is missing Rp markers');
-assert.match(idContact, /\d+(?:[.,]\d+)?\s*jt\b/i, 'Indonesian contact is missing jt markers');
+for (const range of ['< Rp 5jt', 'Rp 5-10jt', 'Rp 10-25jt', 'Rp 25-50jt', '> Rp 50jt']) {
+  assert.ok(idContact.includes(`value="${range}"`), `Missing exact ${range} value in Indonesian contact`);
+}
+for (const [price, pattern] of [
+  ['150rb', /price:\s*['"]150rb['"]/],
+  ['350rb', /price:\s*['"]350rb['"]/],
+  ['792rb', /price:\s*['"]792rb['"]/],
+]) {
+  assert.match(rentalId, pattern, `Missing price: '${price}' in SEWA_RENTAL`);
+}
 
 console.log('English USD pricing checks passed');
