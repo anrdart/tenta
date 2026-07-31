@@ -126,6 +126,52 @@ export const SEWA_PLANS: SewaPlan[] = [
   },
 ];
 
+export const SEWA_PLANS_EN: SewaPlan[] = [
+  {
+    name: 'Starter',
+    tagline: '',
+    price: '5%',
+    unit: 'top-up fee',
+    features: [
+      '$20 - $300 per top-up',
+      'Official Whitelist Account',
+      'No VAT fees',
+      'Partner-level appeal support',
+      'Automatic balance transfer if disabled*',
+      'Priority support (Standard)',
+    ],
+  },
+  {
+    name: 'Growth',
+    tagline: '',
+    price: '4.5%',
+    unit: 'top-up fee',
+    featured: true,
+    features: [
+      '$300 - $900 per top-up',
+      'Official Whitelist Account',
+      'No VAT fees',
+      'Partner-level appeal support',
+      'Automatic balance transfer if disabled*',
+      'Priority support (Priority)',
+    ],
+  },
+  {
+    name: 'Scale',
+    tagline: '',
+    price: '3.5%',
+    unit: 'top-up fee',
+    features: [
+      'Above $900 per top-up',
+      'Official Whitelist Account',
+      'No VAT fees',
+      'Partner-level appeal support',
+      'Automatic balance transfer if disabled*',
+      'Priority support (VIP)',
+    ],
+  },
+];
+
 // Biaya sewa akun & setup — ditampilkan di section pricing homepage (di atas fee topup per paket).
 export const SEWA_RENTAL = {
   setup: 'Gratis',
@@ -133,6 +179,15 @@ export const SEWA_RENTAL = {
     { label: '1 Bulan', price: '150rb' },
     { label: '3 Bulan', price: '350rb' },
     { label: '6 Bulan', price: '792rb' },
+  ],
+} as const;
+
+export const SEWA_RENTAL_EN = {
+  setup: 'Free',
+  tiers: [
+    { label: '1 Month', price: '$10' },
+    { label: '3 Months', price: '$25' },
+    { label: '6 Months', price: '$50' },
   ],
 } as const;
 
