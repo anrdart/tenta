@@ -1,0 +1,80 @@
+---
+// Header khusus LP (disederhanakan): logo + toggle bahasa ID|EN + 1 CTA.
+// Dipakai oleh WhitelistLpPage (menggantikan Header situs yang di-bareHeader).
+import TentaklikLogo from '../brand/TentaklikLogo.astro';
+import ArrowRight from '../icons/ArrowRight.astro';
+import { getLang, stripLocale } from '@i18n/utils';
+
+interface Props {
+  platform: 'meta' | 'google';
+  lang?: 'en' | 'id';
+}
+const { platform, lang: propLang } = Astro.props;
+const lang = propLang || getLang(Astro.currentLocale);
+
+const basePath = stripLocale(Astro.url.pathname);
+const idHref = basePath === '/' ? '/' : basePath;
+const enHref = basePath === '/' ? '/en' : `/en${basePath}`;
+const homeHref = lang === 'en' ? '/en' : '/';
+
+const ctaLabel = lang === 'en' ? 'Apply Now' : 'Ajukan Sekarang';
+const ctaHref = `#shortform-${platform}`;
+---
+<header class="lp-header">
+  <div class="container lp-header-inner">
+    <a href={homeHref} class="lp-header-logo" aria-label="Tentaklik">
+      <TentaklikLogo size={22} />
+    </a>
+
+    <div class="lp-header-actions">
+      <div class="lp-lang" role="group" aria-label="Language">
+        <a href={idHref} class={`lp-lang-opt ${lang === 'id' ? 'active' : ''}`} hreflang="id" aria-current={lang === 'id' ? 'true' : undefined}>ID</a>
+        <span class="lp-lang-sep" aria-hidden="true">|</span>
+        <a href={enHref} class={`lp-lang-opt ${lang === 'en' ? 'active' : ''}`} hreflang="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+      </div>
+      <a href={ctaHref} class="btn btn-primary lp-header-cta">{ctaLabel} <ArrowRight size={13} /></a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .lp-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--ink-100);
+  }
+  .lp-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 60px;
+  }
+  .lp-header-logo { display: flex; align-items: center; flex-shrink: 0; }
+  .lp-header-actions { display: flex; align-items: center; gap: 16px; }
+
+  .lp-lang { display: inline-flex; align-items: center; gap: 6px; }
+  .lp-lang-opt {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-400);
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .lp-lang-opt:hover { color: var(--ink-700); }
+  .lp-lang-opt.active { color: var(--orange-600); background: var(--orange-50); }
+  .lp-lang-sep { color: var(--ink-200); font-size: 12px; }
+
+  .lp-header-cta { padding: 9px 16px; font-size: 14px; }
+
+  @media (max-width: 480px) {
+    .lp-header-inner { height: 54px; gap: 10px; }
+    .lp-header-cta { padding: 8px 12px; font-size: 13px; }
+    .lp-header-cta :global(svg) { display: none; }
+  }
+</style>
