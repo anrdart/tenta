@@ -78,10 +78,14 @@ const builtPages = [
   ['dist/client/en/kontak/index.html', /\$300\b/, 'English contact'],
   ['dist/client/en/layanan/sewa-akun/index.html', /(?:\$|&#(?:36|x24);)20\s*(?:-|&(?:#45|#x2d|minus|ndash);|&#(?:8211|x2013);)\s*(?:\$|&#(?:36|x24);)300/i, 'English account-rental'],
 ];
-const builtFilesExist = builtPages.map(([path]) => existsSync(fileUrl(path)));
+const requireBuild = process.argv.includes('--require-build');
+const missingBuiltPages = builtPages.filter(([path]) => !existsSync(fileUrl(path))).map(([path]) => path);
 
-if (builtFilesExist.some(Boolean)) {
-  assert.ok(builtFilesExist.every(Boolean), 'Expected all three built English pages when any built output exists');
+if (missingBuiltPages.length && (requireBuild || missingBuiltPages.length < builtPages.length)) {
+  assert.fail(`Missing built English page(s): ${missingBuiltPages.join(', ')}`);
+} else if (missingBuiltPages.length === builtPages.length) {
+  console.log('Built English pages not found; skipped build-output checks');
+} else {
   for (const [path, expectedUsd, label] of builtPages) {
     const html = read(path);
     assert.doesNotMatch(html, /<meta\b[^>]*http-equiv\s*=\s*["']?refresh\b/i, `${label} build is a meta-refresh redirect document`);
@@ -89,8 +93,6 @@ if (builtFilesExist.some(Boolean)) {
     assert.match(html, expectedUsd, `${label} build is missing expected USD pricing`);
   }
   console.log('Built English pages are real HTML with expected USD pricing');
-} else {
-  console.log('Built English pages not found; skipped build-output checks');
 }
 
 console.log('English USD pricing checks passed');

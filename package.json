@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && node scripts/check-en-currency.mjs --require-build",
     "preview": "bun run build && wrangler dev",
     "astro": "astro",
     "check": "astro check",
