@@ -1,7 +1,8 @@
 // Middleware SSR (edge Cloudflare): auto-pilih bahasa via IP pada halaman on-demand.
 // Aturan: IP Indonesia → ID (root), IP selain Indonesia → EN (/en).
 // Pilihan manual disimpan di cookie `pref_lang` dan tidak ditimpa geo.
-// Hanya berjalan untuk route on-demand (prerender=false): home + LP whitelist.
+// Hanya berjalan untuk route on-demand (prerender=false): LP whitelist (/whitelist/*).
+// Home tetap static (tak diikutkan geo) demi performa/caching.
 import { defineMiddleware } from 'astro:middleware';
 import { stripLocale } from '@i18n/utils';
 
