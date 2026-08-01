@@ -208,21 +208,12 @@ const images = import.meta.glob<{ default: ImageMetadata }>('/public/assets/gale
 
 <style>
   /* --- META VARIANT STYLES --- */
-  /* Mobile-first: Carousel Snap Layout */
+  /* Mobile-first: vertical stack (revisi: atas-bawah, bukan carousel mix) */
   .lp-photo-grid {
     display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    margin-left: -20px;
-    margin-right: -20px;
-    padding: 16px 9%;
+    flex-direction: column;
     gap: 12px;
-    align-items: center;
+    align-items: stretch;
   }
   .lp-photo-grid::-webkit-scrollbar {
     display: none;
@@ -230,25 +221,15 @@ const images = import.meta.glob<{ default: ImageMetadata }>('/public/assets/gale
 
   .lp-photo-item {
     margin: 0;
-    flex: 0 0 82%;
-    scroll-snap-align: center;
     border-radius: 16px;
     overflow: hidden;
     background: rgba(0,0,0,0.03);
-    aspect-ratio: 4 / 3; /* Uniform size for all mobile photos */
+    aspect-ratio: 4 / 3;
     border: 1.5px solid transparent;
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    opacity: 0.5;
-    transform: scale(0.93);
-    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   }
-  
-  .lp-photo-item.active {
-    opacity: 1;
-    transform: scale(1);
+
+  .lp-photo-item:hover {
     box-shadow: var(--shadow-xl);
     border-color: var(--orange-300);
   }
@@ -269,11 +250,9 @@ const images = import.meta.glob<{ default: ImageMetadata }>('/public/assets/gale
     transform: scale(1.03);
   }
 
-  /* Progress Bar / Dots styling */
+  /* Progress Bar / Dots disembunyikan di mobile (layout stack vertikal) */
   .lp-photo-progress-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: 24px;
+    display: none;
   }
   .lp-photo-dots {
     display: flex;

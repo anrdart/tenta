@@ -211,13 +211,8 @@ if (!items) {
   }
   :global(.lp-testi-track) {
     display: flex;
+    flex-direction: column;
     gap: 16px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
     padding: 8px 4px 20px 4px;
   }
   :global(.lp-testi-track::-webkit-scrollbar) {
@@ -225,8 +220,7 @@ if (!items) {
   }
 
   :global(.lp-testi-card) {
-    flex: 0 0 100%;
-    scroll-snap-align: start;
+    scroll-snap-align: none;
     background: white;
     border: 1.5px solid var(--orange-100);
     border-radius: var(--radius-xl);
@@ -283,8 +277,16 @@ if (!items) {
   }
 
   @media (min-width: 768px) {
+    :global(.lp-testi-track) {
+      flex-direction: row;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
     :global(.lp-testi-card) {
       flex: 0 0 calc((100% - 32px) / 3);
+      scroll-snap-align: start;
     }
     /* Sembunyikan 2 dot terakhir di desktop karena card ditampilkan 3 sekaligus (total 5 card, max scroll index 2) */
     :global(.lp-testi-dot:nth-last-child(1)),
@@ -300,7 +302,7 @@ if (!items) {
       gap: 16px;
     }
     :global(.lp-testi-nav) {
-      align-self: flex-end;
+      display: none;
     }
     :global(.lp-testi-title) {
       font-size: 26px;
