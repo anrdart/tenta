@@ -11,6 +11,7 @@ import LpPromoBanner from '@components/sections/lp/LpPromoBanner.astro';
 import LpShortForm from '@components/sections/lp/LpShortForm.astro';
 import PricingSection from '@components/sections/service/PricingSection.astro';
 import { GOOGLE_LP, INDUSTRIES_LP, INDUSTRY_LP_HEADING } from '@data/whitelist-lp';
+import { SEWA_PLANS_EN } from '@data/sewa-akun';
 import { serviceJsonLd, breadcrumbJsonLd } from '@lib/seo';
 import { site } from '@data/site';
 
@@ -23,25 +24,6 @@ const jsonLd = [
     { name: 'Account Rental', url: `${site.url}/layanan/sewa-akun` },
     { name: 'Google Whitelist (USD)', url },
   ]),
-];
-
-// USD pricing tiers (same % fee, topup range converted from IDR).
-const usdPlans = [
-  {
-    name: 'Starter', tagline: 'Minimum spending $20',
-    price: '5%', unit: 'top-up fee',
-    features: ['$20 - $300 per top-up', 'Official Whitelist Account', 'No VAT fees', 'Partner-level appeal support', 'Auto-balance transfer if disabled (T&C apply)', 'Priority support (Standard)'],
-  },
-  {
-    name: 'Growth', tagline: 'Minimum spending $20',
-    price: '4.5%', unit: 'top-up fee', featured: true,
-    features: ['$300 - $900 per top-up', 'Official Whitelist Account', 'No VAT fees', 'Partner-level appeal support', 'Auto-balance transfer if disabled (T&C apply)', 'Priority support (Priority)'],
-  },
-  {
-    name: 'Scale', tagline: 'Minimum spending $20',
-    price: '3.5%', unit: 'top-up fee',
-    features: ['Above $900 per top-up', 'Official Whitelist Account', 'No VAT fees', 'Partner-level appeal support', 'Auto-balance transfer if disabled (T&C apply)', 'Priority support (VIP)'],
-  },
 ];
 
 // Testimonials are now fetched dynamically from data/whitelist-lp.ts
@@ -95,8 +77,8 @@ const usdPlans = [
   <LpComparison platform={d.platform} lang="en" />
   <IndustriesGrid items={INDUSTRIES_LP.en} heading={INDUSTRY_LP_HEADING.en} bg="warm" center variant="premium" />
   <LpPhotoVisit heading={d.photoHeading} sub={d.photoSub} photos={d.photos} variant="grid" />
-  <PricingSection plans={usdPlans} service="Google Ads Whitelist (USD)" lang="en" />
+  <PricingSection plans={SEWA_PLANS_EN} service="Google Ads Whitelist (USD)" lang="en" />
   <LpTestimonials title="What Our Clients Say" sub="Success stories from advertisers who scaled their ads drama-free." items={d.testimonials.map(t => ({ data: t }))} />
-  <LpPromoBanner originalPrice="$12" promoPrice="$5 / account" />
+  <LpPromoBanner lang="en" startingPrice="$31" />
   <LpShortForm platform="google" lang="en" hasPricing={true} />
 </BaseLayout>
