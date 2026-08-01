@@ -11,7 +11,7 @@ import LpShortForm from '@components/sections/lp/LpShortForm.astro';
 import ArrowRight from '@components/icons/ArrowRight.astro';
 
 import { GOOGLE_LP, INDUSTRIES_LP, INDUSTRY_LP_HEADING } from '@data/whitelist-lp';
-import { SEWA_PLANS } from '@data/sewa-akun';
+import { SEWA_PLANS, SEWA_PLANS_EN } from '@data/sewa-akun';
 import { serviceJsonLd, breadcrumbJsonLd } from '@lib/seo';
 import { site } from '@data/site';
 import { getLang, useT } from '@i18n/utils';
@@ -22,25 +22,7 @@ const d = GOOGLE_LP[lang];
 const path = lang === 'en' ? '/en/google-whitelist-pricing' : '/google-whitelist-pricing';
 const url = `${site.url}${path}`;
 
-const englishPlans: typeof SEWA_PLANS = [
-  {
-    name: 'Starter', tagline: 'Minimum spending $20',
-    price: '5%', unit: 'top-up fee',
-    features: ['$20 - $300 per top-up', 'Official Whitelist Account', 'No VAT fees', 'Partner-level appeal support', 'Auto-balance transfer if disabled (T&C apply)', 'Priority support (Standard)'],
-  },
-  {
-    name: 'Growth', tagline: 'Minimum spending $20',
-    price: '4.5%', unit: 'top-up fee', featured: true,
-    features: ['$300 - $900 per top-up', 'Official Whitelist Account', 'No VAT fees', 'Partner-level appeal support', 'Auto-balance transfer if disabled (T&C apply)', 'Priority support (Priority)'],
-  },
-  {
-    name: 'Scale', tagline: 'Minimum spending $20',
-    price: '3.5%', unit: 'top-up fee',
-    features: ['Above $900 per top-up', 'Official Whitelist Account', 'No VAT fees', 'Partner-level appeal support', 'Auto-balance transfer if disabled (T&C apply)', 'Priority support (VIP)'],
-  },
-];
-
-const plans = lang === 'en' ? englishPlans : SEWA_PLANS;
+const plans = lang === 'en' ? SEWA_PLANS_EN : SEWA_PLANS;
 
 const jsonLd = [
   serviceJsonLd({ name: d.seo.title, description: d.seo.description, url, serviceType: 'Google Ads Whitelist' }),
