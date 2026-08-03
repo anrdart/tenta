@@ -18,6 +18,7 @@ const enHref = basePath === '/' ? '/en' : `/en${basePath}`;
 const homeHref = lang === 'en' ? '/en' : '/';
 
 const ctaLabel = lang === 'en' ? 'Apply Now' : 'Ajukan Sekarang';
+const ctaLabelShort = lang === 'en' ? 'Apply' : 'Ajukan';
 const ctaHref = `#shortform-${platform}`;
 ---
 <header class="lp-header">
@@ -32,7 +33,10 @@ const ctaHref = `#shortform-${platform}`;
         <span class="lp-lang-sep" aria-hidden="true">|</span>
         <a href={enHref} class={`lp-lang-opt ${lang === 'en' ? 'active' : ''}`} hreflang="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
       </div>
-      <a href={ctaHref} class="btn btn-primary lp-header-cta">{ctaLabel} <ArrowRight size={13} /></a>
+      <a href={ctaHref} class="btn btn-primary lp-header-cta">
+        <span class="cta-full">{ctaLabel} <ArrowRight size={13} /></span>
+        <span class="cta-short">{ctaLabelShort}</span>
+      </a>
     </div>
   </div>
 </header>
@@ -70,11 +74,13 @@ const ctaHref = `#shortform-${platform}`;
   .lp-lang-opt.active { color: var(--orange-600); background: var(--orange-50); }
   .lp-lang-sep { color: var(--ink-200); font-size: 12px; }
 
-  .lp-header-cta { padding: 9px 16px; font-size: 14px; }
+  .lp-header-cta { padding: 9px 16px; font-size: 14px; white-space: nowrap; }
+  .cta-short { display: none; }
 
   @media (max-width: 480px) {
-    .lp-header-inner { height: 54px; gap: 10px; }
-    .lp-header-cta { padding: 8px 12px; font-size: 13px; }
-    .lp-header-cta :global(svg) { display: none; }
+    .lp-header-inner { height: 54px; gap: 8px; }
+    .lp-header-cta { padding: 7px 12px; font-size: 13px; }
+    .cta-full { display: none; }
+    .cta-short { display: inline; }
   }
 </style>
