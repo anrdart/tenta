@@ -2,7 +2,6 @@
 // Halaman LP whitelist (Meta/Google) — dipakai oleh route ID & EN.
 // Tipis: pilih data per (platform, lang), render section yang sama.
 import BaseLayout from '@layouts/BaseLayout.astro';
-import LpHeader from '@components/layout/LpHeader.astro';
 import LpHero from '@components/sections/lp/LpHero.astro';
 import LpWhyPlatform from '@components/sections/lp/LpWhyPlatform.astro';
 import LpComparison from '@components/sections/lp/LpComparison.astro';
@@ -45,8 +44,6 @@ const url = `${site.url}${path}`;
 const crumbSewa = lang === 'en' ? 'Account Rental' : 'Sewa Akun';
 const crumbHome = lang === 'en' ? 'Home' : 'Beranda';
 
-// Semua LP pakai header LP sederhana (Header situs dimatikan via bareHeader).
-
 const jsonLd = [
   serviceJsonLd({
     name: seo.title,
@@ -66,7 +63,6 @@ const jsonLd = [
   description={seo.description}
   active="layanan"
   bareLayout
-  bareHeader
   jsonLd={jsonLd}
   keywords={seo.keywords}
   preloadHeroSrc="true"
@@ -92,7 +88,6 @@ const jsonLd = [
       src="https://www.facebook.com/tr?id=1341980327384883&ev=PageView&noscript=1"
     /></noscript>
 
-  <LpHeader platform={platform} lang={lang} />
   <LpHero
     eyebrow={content.hero.eyebrow}
     title={content.hero.title}
